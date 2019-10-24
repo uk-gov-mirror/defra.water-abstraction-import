@@ -1,0 +1,4 @@
+AABL_ID,ISSUE_NO,INCR_NO,AABV_TYPE,EFF_ST_DATE,STATUS,RETURNS_REQ,CHARGEABLE,ASRC_CODE,ACON_APAR_ID,ACON_AADD_ID,ALTY_CODE,ACCL_CODE,MULTIPLE_LH,LIC_SIG_DATE,APP_NO,LIC_DOC_FLAG,EFF_END_DATE,EXPIRY_DATE1,WA_ALTY_CODE,VOL_CONV,WRT_CODE,DEREG_CODE,FGAC_REGION_CODE,SOURCE_CODE,BATCH_RUN_DATE 
+1,1,1,ISSUE,01/01/2019,SUPER,null,null,null,null,null,null,null,null,null,null,null,31/05/2019,null,null,null,null,null,1,NALD,17/10/2019 20:01:13
+1,2,1,ISSUE,01/06/2019,SUPER,null,null,null,null,null,null,null,null,null,null,null,15/07/2019,null,null,null,null,null,1,NALD,17/10/2019 20:01:13
+1,2,2,INCR,16/07/2019,CURR,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,NALD,17/10/2019 20:01:13

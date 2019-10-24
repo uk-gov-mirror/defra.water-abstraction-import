@@ -8,7 +8,7 @@ module.exports = {
 
   jwt: {
     key: process.env.JWT_SECRET,
-    verifyOptions: { algorithms: [ 'HS256' ] }
+    verifyOptions: { algorithms: ['HS256'] }
   },
 
   logger: {
@@ -23,6 +23,10 @@ module.exports = {
     max: 8,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 5000
+  },
+
+  schema: {
+    import: process.env.NODE_ENV === 'test' ? 'water_import_test' : 'import'
   },
 
   server: {
