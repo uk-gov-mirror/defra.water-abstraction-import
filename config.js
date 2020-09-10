@@ -3,7 +3,7 @@
 require('dotenv').config();
 
 const isAcceptanceTestTarget = ['local', 'dev', 'development', 'test', 'preprod'].includes(process.env.NODE_ENV);
-const testMode = parseInt(process.env.TEST_MODE) === 1;
+// const testMode = parseInt(process.env.TEST_MODE) === 1;
 const isProduction = ['production'].includes(process.env.NODE_ENV);
 const isLocal = process.env.NODE_ENV === 'local';
 
@@ -19,7 +19,7 @@ module.exports = {
   },
 
   logger: {
-    level: testMode ? 'info' : 'error',
+    level: 'info',
     airbrakeKey: process.env.ERRBIT_KEY,
     airbrakeHost: process.env.ERRBIT_SERVER,
     airbrakeLevel: 'error'
