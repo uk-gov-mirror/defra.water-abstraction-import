@@ -13,5 +13,6 @@ module.exports = [
   ...licenceImportRoutes,
   ...jobSummaryRoutes,
   naldImportRoutes.postImportLicence,
+  naldImportRoutes.postImportLicenceReturns,
   ...billRunImportRoutes
 ];

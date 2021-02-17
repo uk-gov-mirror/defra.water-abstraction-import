@@ -51,5 +51,18 @@ module.exports = {
         }
       }
     }
+  },
+
+  postImportLicenceReturns: {
+    method: 'POST',
+    path: '/import/1.0/nald/licence/returns',
+    handler: controller.postImportLicenceReturns,
+    options: {
+      validate: {
+        payload: {
+          licenceNumber: Joi.string().required()
+        }
+      }
+    }
   }
 };

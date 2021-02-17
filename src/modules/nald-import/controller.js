@@ -3,6 +3,7 @@
 const Boom = require('@hapi/boom');
 const { getLicenceJson } = require('./transform-permit');
 const { buildReturnsPacket } = require('./transform-returns');
+const { loadReturns } = require('./load');
 
 const jobs = require('./jobs');
 const { getFormats, getLogs, getLogLines } = require('./lib/nald-queries/returns');
@@ -102,9 +103,16 @@ const postImportLicence = async (request, h) => {
   }
 };
 
+const postImportLicenceReturns = async (request, h) => {
+  const { licenceNumber } = request.payload;
+  await loadReturns(licenceNumber);
+  return 'OK';
+};
+
 exports.getLicence = getLicence;
 exports.getReturns = getReturns;
 exports.getReturnsFormats = getReturnsFormats;
 exports.getReturnsLogs = getReturnsLogs;
 exports.getReturnsLogLines = getReturnsLogLines;
 exports.postImportLicence = postImportLicence;
+exports.postImportLicenceReturns = postImportLicenceReturns;
