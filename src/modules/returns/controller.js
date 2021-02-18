@@ -34,7 +34,8 @@ const getVersions = async (request, h) => {
 
 const firstItemOrNotFound = (id, { data }) => {
   if (data.length === 0) {
-    throw Boom.notFound(`Data not found for ${id}`);
+    logger.error(`An error occurred while attempting to fetch return data for ETL: Data not found for ${id}`);
+    return {};
   }
   return data[0];
 };
