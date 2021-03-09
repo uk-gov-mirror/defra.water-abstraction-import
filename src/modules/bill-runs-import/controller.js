@@ -3,7 +3,10 @@
 const constants = require('./lib/constants');
 
 const postImportBillRuns = async request => {
-  await request.messageQueue.publish(constants.IMPORT_BILL_RUNS);
+  for (let regionCode = 1; regionCode <= 8; regionCode++) {
+    await request.messageQueue.publish(constants.IMPORT_BILL_RUNS, { regionCode });
+  }
+
   return {
     error: null
   };

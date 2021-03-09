@@ -34,7 +34,8 @@ nullif(nbr."VALUE_OF_CRNS", 'null')::numeric * 100 as credit_note_value
 from import."NALD_BILL_RUNS" nbr
 join water.regions r on nbr."FGAC_REGION_CODE"::integer=r.nald_region_id
 where 
-nbr."BILL_RUN_TYPE" in ('A', 'S', 'R')
+nbr."FGAC_REGION_CODE"=$1
+and nbr."BILL_RUN_TYPE" in ('A', 'S', 'R')
 and nbr."IAS_XFER_DATE"<>'null'
 and nbr."FIN_YEAR"::integer>=2015
 on conflict (legacy_id) do nothing;
@@ -62,6 +63,7 @@ nullif(nbh."BILL_NO", 'null') as invoice_number
 from import."NALD_BILL_HEADERS" nbh
 left join crm_v2.invoice_accounts ia on nbh."IAS_CUST_REF"=ia.invoice_account_number
 join water.billing_batches b on b.legacy_id=concat_ws(':', nbh."FGAC_REGION_CODE", nbh."ABRN_BILL_RUN_NO")
+where nbh."FGAC_REGION_CODE"=$1
 on conflict (legacy_id) do nothing;
 `;
 
@@ -80,6 +82,7 @@ join water.billing_invoices i on concat_ws(':', nbh."FGAC_REGION_CODE", nbh."ID"
 left join import."NALD_BILL_TRANS" nbt on nbh."FGAC_REGION_CODE"=nbt."FGAC_REGION_CODE" and nbh."ID"=nbt."ABHD_ID" 
 join import."NALD_ABS_LICENCES" nl on nbt."FGAC_REGION_CODE"=nl."FGAC_REGION_CODE" and nbt."LIC_ID"=nl."ID"
 left join water.licences l on nl."LIC_NO"=l.licence_ref
+where nbh."FGAC_REGION_CODE"=$1
 on conflict (billing_invoice_id, licence_id) do nothing;
 `;
 
@@ -224,6 +227,7 @@ left join(
   ) nl on nbt."FGAC_REGION_CODE"=nl."FGAC_REGION_CODE" and nbt."LIC_ID"=nl."ID"
   where not (nbt."FINAL_A2_BILLABLE_AMOUNT"::numeric=0 and nl.is_water_undertaker=true)
 ) nbt2 on nbt2."FGAC_REGION_CODE"=nbt."FGAC_REGION_CODE" and nbt2."ID"=nbt."ID"
+where nbt."FGAC_REGION_CODE"=$1
 on conflict (legacy_id) do nothing;
 `;
 
@@ -246,11 +250,15 @@ true as is_approved,
 b.billing_batch_id,
 t.volume,
 null as errored_on
-from water.billing_batches b 
+from water.billing_batches b
+join water.regions r on b.region_id=r.region_id 
 join water.billing_invoices i on b.billing_batch_id=i.billing_batch_id
 join water.billing_invoice_licences il on il.billing_invoice_id=i.billing_invoice_id
 join water.billing_transactions t on il.billing_invoice_licence_id=t.billing_invoice_licence_id 
-where b.source='nald' and b.batch_type='two_part_tariff'
+where 
+  b.source='nald' 
+  and b.batch_type='two_part_tariff'
+  and r.nald_region_id=$1
 on conflict do nothing;
 `;
 
@@ -273,11 +281,14 @@ case
 end::water.charge_version_years_transaction_type as transaction_type,
 false as is_summer
 from water.billing_batches b
+join water.regions r on b.region_id=r.region_id 
 join water.billing_invoices i on b.billing_batch_id=i.billing_batch_id
 join water.billing_invoice_licences il on i.billing_invoice_id=il.billing_invoice_id
 join water.billing_transactions t on il.billing_invoice_licence_id=t.billing_invoice_licence_id
 join water.charge_elements ce on t.charge_element_id=ce.charge_element_id 
-where b.source='nald'
+where 
+  b.source='nald'
+  and r.nald_region_id=$1
 on conflict do nothing;
 `
 ;

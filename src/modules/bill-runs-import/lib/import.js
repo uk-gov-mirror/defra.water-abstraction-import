@@ -36,17 +36,19 @@ const log = str => {
  *
  * @return {Promise}
  */
-const importBillRuns = async () => {
+const importBillRuns = async job => {
   try {
-    log('Starting...');
+    const { regionCode } = job.data;
+
+    log(`Starting region ${regionCode}...`);
 
     for (const { tableName, query } of importQueries) {
-      log(`Importing ${tableName}...`);
-      await pool.query(query);
-      log(`Imported ${tableName}.`);
+      log(`Importing ${tableName} region ${regionCode}...`);
+      await pool.query(query, [regionCode]);
+      log(`Imported ${tableName} region ${regionCode}.`);
     }
 
-    log('Complete.');
+    log(`Complete region ${regionCode}.`);
   } catch (err) {
     log(err.message);
     throw err;
